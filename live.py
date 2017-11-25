@@ -94,23 +94,24 @@ def ecanliget(url):
         linkget , newrhs = newrhs.split('" title="',1)
         linkget = "https://www.ecanlitvizle.net/" + linkget
         print(linkget)
-	if linkget == "https://www.ecanlitvizle.net/cnn-turk-izle/":
+        if linkget == "https://www.ecanlitvizle.net/cnn-turk-izle/":
             linkget = "https://www.youtube.com/watch?v=pB64y-jJFB4"
-	elif linkget == "https://www.ecanlitvizle.net/ntv-spor-hd-izle/"
-        	linkget = "https://www.youtube.com/watch?v=cTAeSSbupqY"
-	elif linkget == "https://www.ecanlitvizle.net/a-haber-izle/"
-		linkget = "https://www.ahaber.com.tr/webtv/canli-yayin"
+        if linkget == "https://www.ecanlitvizle.net/ntv-spor-hd-izle/":
+            linkget = "https://www.youtube.com/watch?v=cTAeSSbupqY"
+        if linkget == "https://www.ecanlitvizle.net/a-haber-izle/":
+            linkget = "https://www.ahaber.com.tr/webtv/canli-yayin"
         print(linkget)
-	nameget , nnewrhs = newrhs.split('">',1)
+        nameget , nnewrhs = newrhs.split('">',1)
         print(nameget.encode('utf8'))
         link.append(linkget) 
         name.append(nameget)
         print("#EXTINF:0,"+str(nameget.encode('utf8')))
         test19 = ecanlisolver(str(linkget))
-	with open("livebak.m3u8", "a") as myfile:
+        with open("livebak.m3u8", "a") as myfile:
                     myfile.write("#EXTINF:0,"+str(nameget.encode('utf8'))+" \n")
-                    myfile.write("h"+test19+" \n")
-	print(str(test19))
+                    #myfile.write("h"+test19+" \n")
+                    myfile.write(test19 + " \n")
+        print(str(test19))
 
 def tatasolver(url):
 #    url = "https://www.tata.to/channel/13thstreet"
@@ -155,7 +156,3 @@ def tataget(url):
                     
 ecanliget("https://www.ecanlitvizle.net")
 #tataget("https://www.tata.to/channels")
-
-
-
-

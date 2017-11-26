@@ -102,6 +102,7 @@ def ecanliget(url):
         if linkget == "https://www.ecanlitvizle.net/a-haber-izle/":
             linkget = "https://www.ahaber.com.tr/webtv/canli-yayin"
         nameget , nnewrhs = newrhs.split('">',1)
+        nameget = nameget.encode('ascii', 'ignore').decode('ascii')
         print(nameget)
         link.append(linkget) 
         name.append(nameget)

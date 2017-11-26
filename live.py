@@ -71,14 +71,15 @@ try:
 except:
     print('FEHLER')
     
-def ecanlisolver( url ):    
+def ecanlisolver( url ): 
+    #url = "https://www.ecanlitvizle.net/show-tv-izle/"
     proc = subprocess.Popen(["streamlink --stream-url "+url+" best"], stdout=subprocess.PIPE, shell=True)
     (out, err) = proc.communicate()
-    out = str(out)
-    out = out[1:-1]
+    out = out.decode("utf-8") 
     return out 
 
 def ecanliget(url):
+    url = "https://www.ecanlitvizle.net"
     link=[]
     name=[]
     headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0', 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Connection':'keep-alive',}
@@ -93,25 +94,24 @@ def ecanliget(url):
         newlhs , newrhs = newrhs.split('<a href="https://www.ecanlitvizle.net/',1)
         linkget , newrhs = newrhs.split('" title="',1)
         linkget = "https://www.ecanlitvizle.net/" + linkget
-        print(linkget)
+        print("From " + str(linkget))
         if linkget == "https://www.ecanlitvizle.net/cnn-turk-izle/":
             linkget = "https://www.youtube.com/watch?v=pB64y-jJFB4"
         if linkget == "https://www.ecanlitvizle.net/ntv-spor-hd-izle/":
             linkget = "https://www.youtube.com/watch?v=cTAeSSbupqY"
         if linkget == "https://www.ecanlitvizle.net/a-haber-izle/":
             linkget = "https://www.ahaber.com.tr/webtv/canli-yayin"
-        print(linkget)
         nameget , nnewrhs = newrhs.split('">',1)
-        print(nameget.encode('utf8'))
+        print(nameget)
         link.append(linkget) 
         name.append(nameget)
-        print("#EXTINF:0,"+str(nameget.encode('utf8')))
-        test19 = ecanlisolver(str(linkget))
+        print("#EXTINF:0,"+str(nameget))
+        test19 = ecanlisolver(linkget)
         with open("livebak.m3u8", "a") as myfile:
-                    myfile.write("#EXTINF:0,"+str(nameget.encode('utf8'))+" \n")
+                    myfile.write("#EXTINF:0,"+str(nameget)+" \n")
                     #myfile.write("h"+test19+" \n")
-                    myfile.write(test19 + " \n")
-        print(str(test19))
+                    myfile.write(test19)
+        print(test19)
 
 def tatasolver(url):
 #    url = "https://www.tata.to/channel/13thstreet"

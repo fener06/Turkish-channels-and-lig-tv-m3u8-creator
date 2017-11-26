@@ -8,11 +8,24 @@ Created on Wed Sep 13 22:27:18 2017
 
 import requests
 import subprocess 
+import shutil
+#import time
+import sys
 
-f = open('livebak.m3u8', 'w')
+f = open('temp.txt', 'w')
 f.write("#EXTM3U\n") 
 f.close()
 
+def progress(count, total, suffix=''):
+    bar_len = 60
+    filled_len = int(round(bar_len * count / float(total)))
+
+    percents = round(100.0 * count / float(total), 1)
+    bar = '=' * filled_len + '-' * (bar_len - filled_len)
+
+    sys.stdout.write('[%s] %s%s ...%s\r' % (bar, percents, '%', suffix))
+    sys.stdout.flush()  # As suggested by Rom Ruben
+    
 def linksolver( url ):
         headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0', 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Connection':'keep-alive',}
         req = requests.get(url, headers=headers)
@@ -56,20 +69,6 @@ def linksolver2( url ):
         test = req.text
         print(result)
         return result
-try:
-    for i in range(1, 12):
-        request = requests.get(linksolver("http://www.livinstream.org/live/?channel="+str(i)))
-        if request.status_code == 200:
-            print('Web site exists')
-            print(i)
-            with open("livebak.m3u8", "a") as myfile:
-                myfile.write("#EXTINF:0,LIG TV "+str(i)+"\n")
-                myfile.write(linksolver("http://www.livinstream.org/live/?channel="+str(i))+"\n")
-        
-        else:
-            print('Web site does not exist') 
-except:
-    print('FEHLER')
     
 def ecanlisolver( url ): 
     #url = "https://www.ecanlitvizle.net/show-tv-izle/"
@@ -89,12 +88,13 @@ def ecanliget(url):
     newrhs.count('<img src=')-1
     bis = newrhs.count('<img src=')-2
         
-    for i in range(1, bis):
-        print(str(i))
+    for jj in range(1, bis):
+        #print(str(i))
+        progress(ii+jj,9+38)
         newlhs , newrhs = newrhs.split('<a href="https://www.ecanlitvizle.net/',1)
         linkget , newrhs = newrhs.split('" title="',1)
         linkget = "https://www.ecanlitvizle.net/" + linkget
-        print("From " + str(linkget))
+        #print("From " + str(linkget))
         if linkget == "https://www.ecanlitvizle.net/cnn-turk-izle/":
             linkget = "https://www.youtube.com/watch?v=pB64y-jJFB4"
         if linkget == "https://www.ecanlitvizle.net/ntv-spor-hd-izle/":
@@ -103,19 +103,55 @@ def ecanliget(url):
             linkget = "https://www.ahaber.com.tr/webtv/canli-yayin"
         nameget , nnewrhs = newrhs.split('">',1)
         nameget = nameget.encode('ascii', 'ignore').decode('ascii')
-        print(nameget)
+        print(" "+nameget)
         link.append(linkget) 
         name.append(nameget)
-        print("#EXTINF:0,"+str(nameget))
+        #print("#EXTINF:0,"+str(nameget))
         test19 = ecanlisolver(linkget)
-        with open("livebak.m3u8", "a") as myfile:
+        with open("temp.txt", "a") as myfile:
                     myfile.write("#EXTINF:0,"+str(nameget)+" \n")
                     #myfile.write("h"+test19+" \n")
                     myfile.write(test19)
-        print(test19)
+        #print("Link "+test19)
+def ecanligetz(url):
+    url = "https://www.ecanlitvizle.net"
+    link=[]
+    name=[]
+    headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0', 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Connection':'keep-alive',}
+    req = requests.get(url, headers=headers)
+    test = req.text
+    lhs, newrhs = test.split('class="kanallar"',1)
+    newrhs.count('<img src=')-1
+    bis = newrhs.count('<img src=')-2
+        
+    for jj in range(1, bis):
+        #print(str(i))
+        progress(ii+jj,9+38)
+        newlhs , newrhs = newrhs.split('<a href="https://www.ecanlitvizle.net/',1)
+        linkget , newrhs = newrhs.split('" title="',1)
+        linkget = "https://www.ecanlitvizle.net/" + linkget
+        #print("From " + str(linkget))
+        if linkget == "https://www.ecanlitvizle.net/cnn-turk-izle/":
+            linkget = "https://www.youtube.com/watch?v=pB64y-jJFB4"
+        if linkget == "https://www.ecanlitvizle.net/ntv-spor-hd-izle/":
+            linkget = "https://www.youtube.com/watch?v=cTAeSSbupqY"
+        if linkget == "https://www.ecanlitvizle.net/a-haber-izle/":
+            linkget = "https://www.ahaber.com.tr/webtv/canli-yayin"
+        nameget , nnewrhs = newrhs.split('">',1)
+        nameget = nameget.encode('ascii', 'ignore').decode('ascii')
+        #print(str(jj)+" "+nameget)
+        link.append(linkget) 
+        name.append(nameget)
+        #print("#EXTINF:0,"+str(nameget))
+        test19 = ecanlisolver(linkget)
+        with open("temp.txt", "a") as myfile:
+                    myfile.write("#EXTINF:0,"+str(nameget)+" \n")
+                    #myfile.write("h"+test19+" \n")
+                    myfile.write(test19)
 
 def tatasolver(url):
-#    url = "https://www.tata.to/channel/13thstreet"
+    url = "https://www.tata.to/channel/13thstreet"
+    url = "https://www.tata.to/channel/sky-cinema"
     headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0', 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Connection':'keep-alive',}
     req = requests.get(url, headers=headers)
     test = req.text
@@ -151,9 +187,48 @@ def tataget(url):
         print(tatasolver(str(linkget)))
         link.append(linkget)
         name.append(nameget)
-        with open("livebak.m3u8", "a") as myfile:
+        with open("temp.txt", "a") as myfile:
                     myfile.write("#EXTINF:0,"+str(nameget.encode('utf8'))+" \n")
                     myfile.write(tatasolver(str(linkget))+" \n")
-                    
+#%% 
+jj = 0 
+ii = 1         
+                              
+try:
+        print("LIG TV Channels from livinstream.org")
+        for ii in range(1, 10):
+            request = requests.get(linksolver("http://www.livinstream.org/live/?channel="+str(ii)))
+            if request.status_code == 200:
+                print("LIG TV "+str(ii))
+                progress(ii+jj,9+38)
+                with open("temp.txt", "a") as myfile:
+                    myfile.write("#EXTINF:0,LIG TV "+str(ii)+"\n")
+                    myfile.write(linksolver("http://www.livinstream.org/live/?channel="+str(ii))+"\n")
+            #else:
+                #print(' Web site does not exist')
+except:
+    print('FEHLER')
+#print("Turkish Channels from ecanlitvizle.net")                    
 ecanliget("https://www.ecanlitvizle.net")
-#tataget("https://www.tata.to/channels")
+shutil.move('temp.txt', 'live.m3u8')
+print("\n\n\n")
+print("############################################")
+print("\n")
+print(" DONE! Your live.m3u8 File is ready to use  ")
+print("\n")
+print("############################################")
+print("\n\n\n")
+
+while True:
+    try:
+        for ii in range(1, 10):
+            progress(ii+jj,9+38)
+            request = requests.get(linksolver("http://www.livinstream.org/live/?channel="+str(ii)))
+            if request.status_code == 200:
+                #print(str(ii) + ' Web site exists')
+                with open("temp.txt", "a") as myfile:
+                    myfile.write("#EXTINF:0,LIG TV "+str(ii)+"\n")
+                    myfile.write(linksolver("http://www.livinstream.org/live/?channel="+str(ii))+"\n")
+    except:
+        print('FEHLER')
+    ecanligetz("https://www.ecanlitvizle.net")

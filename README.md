@@ -3,7 +3,8 @@ m3u8 files generating by using streamlink based on http://ecanlitvizle.net and h
 
 Dependet on streamlink, please install this at first: https://github.com/streamlink/streamlink
 
-with 
+INSTALL
+-------
 
 `sudo pip install streamlink`
 

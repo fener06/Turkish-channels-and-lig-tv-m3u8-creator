@@ -5,7 +5,7 @@ Dependet on streamlink, please install this at first: https://github.com/streaml
 
 with 
 
-sudo pip install streamlink`
+`sudo pip install streamlink`
 
 
 Channels

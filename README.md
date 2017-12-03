@@ -20,7 +20,11 @@ and start the script with
 the live.m3u8 file will be located at the samt path as live.py
 
 
-*_Channels_*
+Channels
+========
+
+BEINSPORTS TR CHANNELS
+----------------------
 
 LIG TV 1
 
@@ -36,6 +40,8 @@ LIG TV 7
 
 LIG TV 9
 
+TURKISH CHANNELS
+----------------
 
 1 SHOW TV HD
 

@@ -9,12 +9,15 @@ Created on Wed Sep 13 22:27:18 2017
 import requests
 import subprocess 
 import shutil
+import re
 #import time
 import sys
 
 f = open('temp.txt', 'w')
 f.write("#EXTM3U\n") 
 f.close()
+
+
 
 def progress(count, total, suffix=''):
     bar_len = 60
@@ -41,34 +44,6 @@ def trlinksolver( url ):
         lhs, rhs = test.split("source: \'",1)
         source , newrhs = rhs.split("\',\n",1)
         return source    
-
-def linksolver2( url ):
-        headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0', 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Connection':'keep-alive',}
-        req = requests.get(url, headers=headers)
-        test = req.text
-        left,right = test.split('/"'+">Video yay",1)
-        new = left.split('/tr',-1)
-        livetv= "http://livetv.sx/tr"+ new[-1]
-        #http://livetv.sx/tr/eventinfo/556934_san_lorenzo_lanus/
-        req = requests.get(livetv, headers=headers)
-        #http://livetv.sx/tr/eventinfo/556934_san_lorenzo_lanus/
-        test = req.text
-        left,right=test.split('id="links_block"',1)
-        nleft,nright=right.split('id="comblockabs"',1)
-        source=nleft
-        start_sep='href="//'
-        end_sep='si=1">'
-        result=[]
-        tmp=source.split(start_sep)
-        for par in tmp:
-            if end_sep in par:
-                result.append(par.split(end_sep)[0])
-        for i in range(0,len(result)):
-            result[i] = "http://" + result[i] + "si=1"
-        req = requests.get(result[0], headers=headers)
-        test = req.text
-        print(result)
-        return result
     
 def ecanlisolver( url ): 
     #url = "https://www.ecanlitvizle.net/show-tv-izle/"
@@ -76,120 +51,44 @@ def ecanlisolver( url ):
     (out, err) = proc.communicate()
     out = out.decode("utf-8") 
     return out 
-
+def write2file( names_n , channels_n  ):
+    for i in range(0,len(names_n)):
+        with open("temp.txt", "a") as myfile:
+                myfile.write("#EXTINF:0,"+str(names_n[i])+" \n")
+                #myfile.write("h"+test19+" \n")
+                myfile.write(channels_n[i])
 def ecanliget(url):
-    url = "https://www.ecanlitvizle.net"
-    link=[]
+    #url = "https://www.canlitv.plus/kanallar/haber"
     name=[]
     headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0', 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Connection':'keep-alive',}
     req = requests.get(url, headers=headers)
     test = req.text
-    lhs, newrhs = test.split('class="kanallar"',1)
-    newrhs.count('<img src=')-1
-    bis = newrhs.count('<img src=')-2
-        
-    for jj in range(1, bis):
+    lhs, newrhs = test.split('<ul class="kanallar">',1)
+    #<div class="div_ekran_alti">
+    lhs, newrhs = newrhs.split('<footer>',1)
+    r = re.compile('(?<=<a href=").*?(?=" title)')
+    n = re.compile('(?<=title=").*?(?=")')
+    liste = r.findall(lhs)
+    name = n.findall(lhs)
+    number = 0   
+    channels =[]
+    names = []
+    for i in liste:
         #print(str(i))
-        progress(ii+jj,9+38)
-        newlhs , newrhs = newrhs.split('<a href="https://www.ecanlitvizle.net/',1)
-        linkget , newrhs = newrhs.split('" title="',1)
-        linkget = "https://www.ecanlitvizle.net/" + linkget
-        #print("From " + str(linkget))
-        if linkget == "https://www.ecanlitvizle.net/cnn-turk-izle/":
-            linkget = "https://www.youtube.com/watch?v=pB64y-jJFB4"
-        if linkget == "https://www.ecanlitvizle.net/ntv-spor-hd-izle/":
-            linkget = "https://www.youtube.com/watch?v=cTAeSSbupqY"
-        if linkget == "https://www.ecanlitvizle.net/a-haber-izle/":
-            linkget = "https://www.ahaber.com.tr/webtv/canli-yayin"
-        nameget , nnewrhs = newrhs.split('">',1)
-        nameget = nameget.encode('ascii', 'ignore').decode('ascii')
-        print(" "+nameget)
-        link.append(linkget) 
-        name.append(nameget)
-        #print("#EXTINF:0,"+str(nameget))
-        test19 = ecanlisolver(linkget)
-        with open("temp.txt", "a") as myfile:
-                    myfile.write("#EXTINF:0,"+str(nameget)+" \n")
-                    #myfile.write("h"+test19+" \n")
-                    myfile.write(test19)
-        #print("Link "+test19)
-def ecanligetz(url):
-    url = "https://www.ecanlitvizle.net"
-    link=[]
-    name=[]
-    headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0', 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Connection':'keep-alive',}
-    req = requests.get(url, headers=headers)
-    test = req.text
-    lhs, newrhs = test.split('class="kanallar"',1)
-    newrhs.count('<img src=')-1
-    bis = newrhs.count('<img src=')-2
-        
-    for jj in range(1, bis):
-        #print(str(i))
-        progress(ii+jj,9+38)
-        newlhs , newrhs = newrhs.split('<a href="https://www.ecanlitvizle.net/',1)
-        linkget , newrhs = newrhs.split('" title="',1)
-        linkget = "https://www.ecanlitvizle.net/" + linkget
-        #print("From " + str(linkget))
-        if linkget == "https://www.ecanlitvizle.net/cnn-turk-izle/":
-            linkget = "https://www.youtube.com/watch?v=pB64y-jJFB4"
-        if linkget == "https://www.ecanlitvizle.net/ntv-spor-hd-izle/":
-            linkget = "https://www.youtube.com/watch?v=cTAeSSbupqY"
-        if linkget == "https://www.ecanlitvizle.net/a-haber-izle/":
-            linkget = "https://www.ahaber.com.tr/webtv/canli-yayin"
-        nameget , nnewrhs = newrhs.split('">',1)
-        nameget = nameget.encode('ascii', 'ignore').decode('ascii')
-        #print(str(jj)+" "+nameget)
-        link.append(linkget) 
-        name.append(nameget)
-        #print("#EXTINF:0,"+str(nameget))
-        test19 = ecanlisolver(linkget)
-        with open("temp.txt", "a") as myfile:
-                    myfile.write("#EXTINF:0,"+str(nameget)+" \n")
-                    #myfile.write("h"+test19+" \n")
-                    myfile.write(test19)
+        progress(ii+number,9+len(name))
+        nameget = name[number].encode('ascii', 'ignore').decode('ascii')
+        print(nameget)
+        names.append(nameget)
+        channels.append( ecanlisolver(str(i)))
+        number = number +1
+    indices = [i for i, elem in enumerate(channels) if 'error:' not in elem]
+    names_n =[]
+    channels_n =[]
+    for i in indices:
+        names_n.append(names[i])
+        channels_n.append(channels[i])
+    return names_n,channels_n
 
-def tatasolver(url):
-    url = "https://www.tata.to/channel/13thstreet"
-    url = "https://www.tata.to/channel/sky-cinema"
-    headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0', 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Connection':'keep-alive',}
-    req = requests.get(url, headers=headers)
-    test = req.text
-    left , right = test.split('data-src="',1)
-    link ,waste = right.split('"',1)
-    req = requests.get(link, headers=headers)
-    test = req.text
-    m3ulink = link.replace("embed.html", "index.m3u8")
-    req = requests.get(m3ulink, headers=headers)
-    print(m3ulink)
-    return m3ulink
-
-
-
-def tataget(url):
-#    url = "https://www.tata.to/channels"
-    link=[]
-    name=[]
-    headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0', 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Connection':'keep-alive',}
-    req = requests.get(url, headers=headers)
-    newrhs = req.text
-    bis = newrhs.count('https://www.tata.to/channel/') -13
-    
-    for i in range(1, bis+1):
-        print(str(i))
-        newlhs , newrhs = newrhs.split('https://www.tata.to/channel/',1)
-        linkget , newrhs = newrhs.split('" class="',1)
-        nameget = linkget
-        linkget = "https://www.tata.to/channel/" + linkget
-        print(linkget)
-        #nameget , nnewrhs = newrhs.split('">',1)
-        print(str(nameget.encode('utf8')))
-        print(tatasolver(str(linkget)))
-        link.append(linkget)
-        name.append(nameget)
-        with open("temp.txt", "a") as myfile:
-                    myfile.write("#EXTINF:0,"+str(nameget.encode('utf8'))+" \n")
-                    myfile.write(tatasolver(str(linkget))+" \n")
 #%% 
 jj = 0 
 ii = 1         
@@ -208,9 +107,12 @@ try:
                 #print(' Web site does not exist')
 except:
     print('FEHLER')
-#print("Turkish Channels from ecanlitvizle.net")                    
-ecanliget("https://www.ecanlitvizle.net")
+(names_n,channels_n) = ecanliget("https://www.canlitv.plus/?sayfa=1")
+write2file(names_n,channels_n)
 shutil.move('temp.txt', 'live.m3u8')
+
+#print("Turkish Channels from ecanlitvizle.net")                    
+#ecanliget("https://www.ecanlitvizle.net")
 print("\n\n\n")
 print("############################################")
 print("\n")
@@ -230,5 +132,13 @@ while True:
                     myfile.write("#EXTINF:0,LIG TV "+str(ii)+"\n")
                     myfile.write(linksolver("http://www.livinstream.org/live/?channel="+str(ii))+"\n")
     except:
-        print('FEHLER')
-    ecanligetz("https://www.ecanlitvizle.net")
+        print('FEHLER 1')
+    try:
+        (names_n1 , channels_n1) = ecanliget("https://www.canlitv.plus/?sayfa=1")
+        (names_n2 , channels_n2) = ecanliget("https://www.canlitv.plus/?sayfa=2")
+        names_n1.extend(names_n2)
+        channels_n1.extend(channels_n2)
+        write2file(names_n1,channels_n1)
+    except:
+        print('FEHLER 2')    
+    shutil.move('temp.txt', 'live.m3u8')

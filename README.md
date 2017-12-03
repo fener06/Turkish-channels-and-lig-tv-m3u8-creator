@@ -2,6 +2,12 @@
 m3u8 files generating by using streamlink based on http://ecanlitvizle.net and http://www.livinstream.org
 
 Dependet on streamlink, please install this at first: https://github.com/streamlink/streamlink
+
+with 
+
+sudo pip install streamlink`
+
+
 Channels
 
 LIG TV 1

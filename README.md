@@ -18,7 +18,7 @@ and start the script with
 
 `sudo python live.py`
 
-the live.m3u8 file will be located at the samt path as live.py
+the live.m3u8 file will be located at the same path as live.py
 
 
 Channels

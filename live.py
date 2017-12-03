@@ -121,24 +121,24 @@ print("\n")
 print("############################################")
 print("\n\n\n")
 
-while True:
-    try:
-        for ii in range(1, 10):
-            progress(ii+jj,9+38)
-            request = requests.get(linksolver("http://www.livinstream.org/live/?channel="+str(ii)))
-            if request.status_code == 200:
-                #print(str(ii) + ' Web site exists')
-                with open("temp.txt", "a") as myfile:
-                    myfile.write("#EXTINF:0,LIG TV "+str(ii)+"\n")
-                    myfile.write(linksolver("http://www.livinstream.org/live/?channel="+str(ii))+"\n")
-    except:
-        print('FEHLER 1')
-    try:
-        (names_n1 , channels_n1) = ecanliget("https://www.canlitv.plus/?sayfa=1")
-        (names_n2 , channels_n2) = ecanliget("https://www.canlitv.plus/?sayfa=2")
-        names_n1.extend(names_n2)
-        channels_n1.extend(channels_n2)
-        write2file(names_n1,channels_n1)
-    except:
-        print('FEHLER 2')    
-    shutil.move('temp.txt', 'live.m3u8')
+
+try:
+    for ii in range(1, 10):
+        progress(ii+jj,9+38)
+        request = requests.get(linksolver("http://www.livinstream.org/live/?channel="+str(ii)))
+        if request.status_code == 200:
+            #print(str(ii) + ' Web site exists')
+            with open("temp.txt", "a") as myfile:
+                myfile.write("#EXTINF:0,LIG TV "+str(ii)+"\n")
+                myfile.write(linksolver("http://www.livinstream.org/live/?channel="+str(ii))+"\n")
+except:
+    print('FEHLER 1')
+try:
+    (names_n1 , channels_n1) = ecanliget("https://www.canlitv.plus/?sayfa=1")
+    (names_n2 , channels_n2) = ecanliget("https://www.canlitv.plus/?sayfa=2")
+    names_n1.extend(names_n2)
+    channels_n1.extend(channels_n2)
+    write2file(names_n1,channels_n1)
+except:
+    print('FEHLER 2')    
+shutil.move('temp.txt', 'live.m3u8')

@@ -1,0 +1,11 @@
+('/Users/hakandemirel/Downloads/Turkish-channels-and-lig-tv-m3u8-creator/build/live/setuptools-27.2.0-py3.6.egg',
+ None,
+ {'*.pyc', '*.pyo', '*.py', '*.pyd', 'EGG-INFO', '*.so'},
+ 'DATA',
+ [('setuptools/script (dev).tmpl',
+   '/Users/hakandemirel/Downloads/Turkish-channels-and-lig-tv-m3u8-creator/build/live/setuptools-27.2.0-py3.6.egg/setuptools/script '
+   '(dev).tmpl',
+   'DATA'),
+  ('setuptools/script.tmpl',
+   '/Users/hakandemirel/Downloads/Turkish-channels-and-lig-tv-m3u8-creator/build/live/setuptools-27.2.0-py3.6.egg/setuptools/script.tmpl',
+   'DATA')])

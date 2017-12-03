@@ -20,7 +20,7 @@ and start the script with
 the live.m3u8 file will be located at the samt path as live.py
 
 
-_Channels_
+*_Channels_*
 
 LIG TV 1
 

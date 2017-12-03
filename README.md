@@ -22,10 +22,9 @@ the live.m3u8 file will be located at the samt path as live.py
 
 
 Channels
-========
+--------
 
-BEINSPORTS TR CHANNELS
-----------------------
+**BEINSPORTS TR CHANNELS**
 
 LIG TV 1
 
@@ -41,8 +40,7 @@ LIG TV 7
 
 LIG TV 9
 
-TURKISH CHANNELS
-----------------
+**TURKISH CHANNELS**
 
 1 SHOW TV HD
 

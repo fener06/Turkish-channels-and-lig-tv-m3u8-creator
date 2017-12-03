@@ -6,6 +6,15 @@ Dependet on streamlink, please install this at first: https://github.com/streaml
 with 
 
 `sudo pip install streamlink`
+or
+`git clone https://github.com/streamlink/streamlink`
+`sudo python setup.py install`
+
+and start the script with
+
+`sudo python live.py`
+
+the live.m3u8 file will be located at the samt path as live.py
 
 
 Channels

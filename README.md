@@ -3,6 +3,10 @@ m3u8 files generating by using streamlink based on http://ecanlitvizle.net and h
 
 Dependet on streamlink, please install this at first: https://github.com/streamlink/streamlink
 
+Windows
+-------
+https://bwsyncandshare.kit.edu/dl/fiJpuXC4YWQRZ34eAws7kqkK
+
 INSTALL
 -------
 

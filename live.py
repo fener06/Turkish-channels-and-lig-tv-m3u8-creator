@@ -12,12 +12,11 @@ import shutil
 import re
 #import time
 import sys
+#import os
 
 f = open('temp.txt', 'w')
 f.write("#EXTM3U\n") 
 f.close()
-
-
 
 def progress(count, total, suffix=''):
     bar_len = 60
@@ -47,9 +46,7 @@ def trlinksolver( url ):
     
 def ecanlisolver( url ): 
     #url = "https://www.ecanlitvizle.net/show-tv-izle/"
-    proc = subprocess.Popen(["streamlink --stream-url "+url+" best"], stdout=subprocess.PIPE, shell=True)
-    (out, err) = proc.communicate()
-    out = out.decode("utf-8") 
+    out = subprocess.getoutput("streamlink --stream-url "+url+" best")
     return out 
 def write2file( names_n , channels_n  ):
     for i in range(0,len(names_n)):
@@ -58,8 +55,9 @@ def write2file( names_n , channels_n  ):
                 #myfile.write("h"+test19+" \n")
                 myfile.write(channels_n[i])
 def ecanliget(url):
-    #url = "https://www.canlitv.plus/kanallar/haber"
+    #url = "https://www.canlitv.plus/?sayfa=2"
     name=[]
+    
     headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0', 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Connection':'keep-alive',}
     req = requests.get(url, headers=headers)
     test = req.text
@@ -106,11 +104,22 @@ try:
             #else:
                 #print(' Web site does not exist')
 except:
-    print('FEHLER')
-(names_n,channels_n) = ecanliget("https://www.canlitv.plus/?sayfa=1")
-write2file(names_n,channels_n)
-shutil.move('temp.txt', 'live.m3u8')
+    print('FEHLER livinstream.org')
 
+try:
+    print("1.list")
+    (names_n1 , channels_n1) = ecanliget("https://www.canlitv.plus/?sayfa=1")
+    write2file(names_n1,channels_n1)
+    shutil.move('temp.txt', 'live.m3u8')
+    print("2.list")
+    (names_n2 , channels_n2) = ecanliget("https://www.canlitv.plus/?sayfa=2")
+    names_n1.extend(names_n2)
+    channels_n1.extend(channels_n2)
+    write2file(names_n1,channels_n1)
+except:
+    print('FEHLER canlitv.plus') 
+
+shutil.move('temp.txt', 'live.m3u8')
 #print("Turkish Channels from ecanlitvizle.net")                    
 #ecanliget("https://www.ecanlitvizle.net")
 print("\n\n\n")
@@ -120,25 +129,3 @@ print(" DONE! Your live.m3u8 File is ready to use  ")
 print("\n")
 print("############################################")
 print("\n\n\n")
-
-
-try:
-    for ii in range(1, 10):
-        progress(ii+jj,9+38)
-        request = requests.get(linksolver("http://www.livinstream.org/live/?channel="+str(ii)))
-        if request.status_code == 200:
-            #print(str(ii) + ' Web site exists')
-            with open("temp.txt", "a") as myfile:
-                myfile.write("#EXTINF:0,LIG TV "+str(ii)+"\n")
-                myfile.write(linksolver("http://www.livinstream.org/live/?channel="+str(ii))+"\n")
-except:
-    print('FEHLER 1')
-try:
-    (names_n1 , channels_n1) = ecanliget("https://www.canlitv.plus/?sayfa=1")
-    (names_n2 , channels_n2) = ecanliget("https://www.canlitv.plus/?sayfa=2")
-    names_n1.extend(names_n2)
-    channels_n1.extend(channels_n2)
-    write2file(names_n1,channels_n1)
-except:
-    print('FEHLER 2')    
-shutil.move('temp.txt', 'live.m3u8')

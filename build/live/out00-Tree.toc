@@ -1,5 +1,5 @@
-('/Users/hakandemirel/Downloads/Turkish-channels-and-lig-tv-m3u8-creator/build/live/PySocks-1.6.7-py3.6.egg',
+('c:\\users\\hakandemirel\\appdata\\local\\programs\\python\\python36-32\\lib\\site-packages\\urllib3-1.22-py3.6.egg',
  None,
- {'*.pyc', '*.pyo', '*.py', '*.pyd', 'EGG-INFO', '*.so'},
+ {'*.pyd', '*.pyo', '*.py', '*.so', 'EGG-INFO', '*.pyc'},
  'DATA',
  [])

@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['live.py'],
-             pathex=['/Users/hakandemirel/Downloads/Turkish-channels-and-lig-tv-m3u8-creator'],
+             pathex=['C:\\Users\\hakandemirel\\Downloads\\live_win'],
              binaries=[],
              datas=[],
              hiddenimports=[],
